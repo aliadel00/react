@@ -1,4 +1,6 @@
-import React, { Component, useState } from 'react';
+import React, { Component} from 'react';
+import Form from './form';
+import ScoreWindow from './scoreWindow';
 
 class Questionere extends Component {
     state = {questions:[{
@@ -13,39 +15,55 @@ class Questionere extends Component {
     },
     {
         question : "If you had to name one thing that makes you stand out from others, what would that be?",
-        answer:[{answerText:"invent a time machine",isCorrect:false, id:1},{answerText:"start a business",isCorrect:true, id:2},{answerText:"make some money",isCorrect:false, id:3}],
+        answer:[{answerText:"self-Discipline",isCorrect:false, id:1},{answerText:"My Brains",isCorrect:true, id:2},{answerText:"My Money",isCorrect:false, id:3}],
        id:3
     }
     ],
     counter:0,
     score:0,
+    statment:'',
+    name:'',
+    isValid:false
  }
 
+handleValidation= (valid)=>{
+this.setState({...this.state,isValid:valid})
+console.log("X")
+}
  handleAnswerAction = (value)=>{
      let score = this.state.score
-     if(value===true){
-        this.setState({...this.state,score:score+1})
+     let counter = this.state.counter
+     let statment = this.state.statment
+     if(score===0){
+      statment=  "You look like a decent Man!!"
+     }else if(score<2){
+         statment= "You are'nt in love as it seems!!"
+     }else if(score>=2){
+         statment= "You are a playboy!!"
      }
-    
- }
- 
-    handleCounter = () => {
-        let counter = this.state.counter
-        this.setState({...this.state,counter:counter+1})
-    }
+     
+     if(value){
+        this.setState({...this.state,score:score+1,counter:counter+1,statment:statment})
+      
+     }else{
+        this.setState({...this.state,counter:counter+1,statment:statment})
+     }
+   
+}
     render() { 
+        let length = this.state.questions.length
         return (  
-            
-            <div className="shadow p-3 mb-5 bg-white rounded card text-left d-flex justify-content-center m-5 container-fluid" style={{width: 30+"rem",height:22+"rem", position: "fixed",
+            <div className="shadow p-3 rounded mb-5 bg-white rounded card text-left d-flex justify-content-center m-5 " style={{width: 30+"rem",height:22+"rem", position: "fixed",
             top: 50+"%",
             left: 50+"%",
-            transform: "translate(-60%, -65%)",borderEndEndRadius:40}}>
-        { this.state.counter===this.state.questions.length? <div className=" d-flex justify-content-center" on><h3 className="d-flex flex-column mb-3">You scored {this.state.score} out of {this.state.questions.length}</h3></div> :  <div className="card-body">
-        <h5 className="card-title">Q { this.state.counter+1}/{this.state.questions.length}</h5>
-        <p className="card-text">{this.state.questions[this.state.counter].question}</p>
-        {this.state.questions[this.state.counter].answer.map(text=><button onClick={()=>this.handleAnswerAction(text.isCorrect)}  key={text.id} className={"btn btn-light rounded-pill d-flex flex-column m-3"}>{text.answerText}</button>)}
-       <buttton onClick={this.handleCounter} className="btn btn-primary float-right ">Next Question</buttton>
-            </div>
+            transform: "translate(-60%, -65%)"}}>
+             
+        { this.state.isValid?(this.state.counter===this.state.questions.length? <ScoreWindow scoreObj={this.state} length={length}></ScoreWindow> 
+          :  <div className="card-body">
+        <h3 className="card-title mb-4">Q { this.state.counter+1}/ {this.state.questions.length}</h3>
+        <h6 className="card-text m-2 ">{this.state.questions[this.state.counter].question}</h6>
+        {this.state.questions[this.state.counter].answer.map(text=><button  onClick={()=>this.handleAnswerAction(text.isCorrect)} key={text.id} className={"w-100 justify-content-center btn btn-outline-info rounded-pill d-flex flex-column mt-3 "}><p className="m-0 text-center w-100 h-100"  >{text.answerText}</p></button>)}
+            </div>):<Form formObj={this.handleValidation}></Form>
     }
           </div>
         
