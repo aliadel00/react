@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   return (
     <React.Fragment>
-<Logo></Logo>
+ <Logo></Logo>
  <Questionere></Questionere>
  <Footer></Footer>
    </React.Fragment>
